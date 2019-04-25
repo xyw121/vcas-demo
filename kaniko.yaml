@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: kaniko-job
-  namespace: default
+  namespace: xyw121
 spec:
   completions: 1
   template:
@@ -14,7 +14,7 @@ spec:
       initContainers:
         - name: git-pull-init
           image: alpine/git:latest
-          args: ["clone","https://github.com/cdan/vcas-demo.git","/workspace"]
+          args: ["clone","https://github.com/xyw121/vcas-demo.git","/workspace"]
           volumeMounts:
             - name: workspace-vol
               mountPath: /workspace
@@ -23,7 +23,7 @@ spec:
         image: gcr.io/kaniko-project/executor:latest
         args: ["--dockerfile=/workspace/Dockerfile",
                "--context=/workspace",
-               "--destination=cdan/vcas-demo:$${GIT_COMMIT_ID}"]
+               "--destination=xyw121/vcas-demo:$${GIT_COMMIT_ID}"]
         volumeMounts:
           - name: workspace-vol
             mountPath: /workspace
@@ -34,7 +34,7 @@ spec:
         projected:
           sources:
           - secret:
-              name: docker-secret
+              name: docker-secret-xyw121
               items:
               - key: .dockerconfigjson
                 path: .docker/config.json
